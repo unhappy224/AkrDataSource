@@ -1,15 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{419d14b1-e87a-42a7-b205-b5bb4526dceb}</ProjectGuid>
+    <ProjectGuid>{57454560-3F91-4C7C-BC9E-6BC5C2FBE5C1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AkaDataSource</RootNamespace>
-    <AssemblyName>AkaDataSource</AssemblyName>
+    <RootNamespace>AkrDataSource</RootNamespace>
+    <AssemblyName>AkrDataSource</AssemblyName>
     <DefaultLanguage>zh-CN</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -35,9 +35,13 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <None Include="AkrDataSource.nuspec" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="IColletcionDataSource.cs" />
+    <Compile Include="IPagingColletcionDataSource.cs" />
+    <Compile Include="PagingColletcionDataSourceBase.cs" />
+    <Compile Include="PagingType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
@@ -48,5 +52,12 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-
+  <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release'">
+    <Exec Command="del $(OutputPath)*.nupkg">
+    </Exec>
+    <Exec Command="nuget pack $(AssemblyName).csproj -Prop Configuration=Release -OutputDirectory $(OutputPath)">
+    </Exec>
+    <Exec Command="nuget push $(OutputPath)*.nupkg sino5802486.. -Source http://sinonuget.chinacloudsites.cn/nuget/">
+    </Exec>
+  </Target>
 </Project>
