@@ -19,11 +19,11 @@ namespace AkrDataSource
         public async Task Reload(TParam param)
         {
             IsNoMoreData = false;
-            if (Count > 0) Clear();
+            
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsNoMoreData)));
             CurrentPageImpt = 0;
             CurrentParam = param;
-            await SetPage(0);
+            await SetPage(0,true);
         }
 
         public int CurrentPage => CurrentPageImpt;
@@ -35,11 +35,11 @@ namespace AkrDataSource
         public async Task Next()
         {
             CurrentPageImpt += 1;
-            await SetPage(CurrentPageImpt);
+            await SetPage(CurrentPageImpt,false);
         }
 
 
-        public async Task SetPage(int page)
+        public async Task SetPage(int page, bool needClear)
         {
             var data = await LoadDataImpt(page, CurrentParam);
             if (data == null || !data.Any())
@@ -49,7 +49,7 @@ namespace AkrDataSource
                 return;
             }
 
-            if (PagingType == PagingType.Paging && Count > 0)
+            if (needClear || PagingType == PagingType.Paging && Count > 0)
             {
                 Clear();
             }

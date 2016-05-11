@@ -11,6 +11,6 @@ namespace AkrDataSource
         PagingType PagingType { get; }
 
         Task Next();
-        Task SetPage(int page);
+        Task SetPage(int page,bool needClear);
     }
 }
