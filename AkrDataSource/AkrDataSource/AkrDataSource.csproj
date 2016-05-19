@@ -53,11 +53,9 @@
   </Target>
   -->
   <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release'"> 
-   <Exec Command="/usr/local/bin/nuget pack $(AssemblyName).csproj -Prop Configuration=Release -OutputDirectory $(OutputPath)"  > 
+   <Exec Command="nuget pack $(AssemblyName).csproj -Prop Configuration=Release -OutputDirectory $(OutputPath)"  > 
     </Exec>
-    <Exec Command="/usr/local/bin/nuget push $(OutputPath)*.nupkg sino5802486.. -Source http://sinonuget.chinacloudsites.cn/nuget/" >
+    <Exec Command="nuget push $(OutputPath)*.nupkg sino5802486.. -Source http://sinonuget.chinacloudsites.cn/nuget/" >
     </Exec>
-    
-   
   </Target>
 </Project>
