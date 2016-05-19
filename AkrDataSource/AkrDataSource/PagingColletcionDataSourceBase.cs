@@ -41,20 +41,22 @@ namespace AkrDataSource
 
         public async Task SetPage(int page, bool needClear)
         {
-            var data = await LoadDataImpt(page, CurrentParam);
-            if (data == null || !data.Any())
-            {
-                IsNoMoreData = true;
-                OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsNoMoreData)));
-                return;
-            }
+			if (needClear || PagingType == PagingType.Paging && Count > 0)
+			{
+				Clear();
+			}
 
-            if (needClear || PagingType == PagingType.Paging && Count > 0)
-            {
-                Clear();
-            }
+			var data = await LoadDataImpt(page, CurrentParam);
 
-            AddRange(data);
+			if (data == null || !data.Any())
+			{
+				IsNoMoreData = true;
+				OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsNoMoreData))); 
+			}
+			else
+			{
+				AddRange(data);
+			} 
         }
 
 
