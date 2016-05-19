@@ -19,11 +19,11 @@ namespace AkrDataSource
         public async Task Reload(TParam param)
         {
             IsNoMoreData = false;
-            
+
             OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsNoMoreData)));
             CurrentPageImpt = 0;
             CurrentParam = param;
-            await SetPage(0,true);
+            await SetPage(0, true);
         }
 
         public int CurrentPage => CurrentPageImpt;
@@ -35,28 +35,35 @@ namespace AkrDataSource
         public async Task Next()
         {
             CurrentPageImpt += 1;
-            await SetPage(CurrentPageImpt,false);
+            await SetPage(CurrentPageImpt, false);
         }
 
 
         public async Task SetPage(int page, bool needClear)
         {
-			if (needClear || PagingType == PagingType.Paging && Count > 0)
-			{
-				Clear();
-			}
+            IEnumerable<T> data;
+            try
+            {
+                data = await LoadDataImpt(page, CurrentParam);
+            }
+            catch (System.Exception ex)
+            {
+                if (needClear || PagingType == PagingType.Paging && Count > 0)
+                {
+                    Clear();
+                }
+                throw;
+            }
 
-			var data = await LoadDataImpt(page, CurrentParam);
-
-			if (data == null || !data.Any())
-			{
-				IsNoMoreData = true;
-				OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsNoMoreData))); 
-			}
-			else
-			{
-				AddRange(data);
-			} 
+            if (data == null || !data.Any())
+            {
+                IsNoMoreData = true;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsNoMoreData)));
+            }
+            else
+            {
+                AddRange(data);
+            }
         }
 
 
