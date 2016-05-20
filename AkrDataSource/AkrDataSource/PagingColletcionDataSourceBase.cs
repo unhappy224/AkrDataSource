@@ -48,11 +48,14 @@ namespace AkrDataSource
             }
             catch (System.Exception ex)
             {
+                throw;
+            }
+            finally
+            {
                 if (needClear || PagingType == PagingType.Paging && Count > 0)
                 {
                     Clear();
                 }
-                throw;
             }
 
             if (data == null || !data.Any())
